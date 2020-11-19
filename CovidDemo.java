@@ -45,21 +45,19 @@ public class CovidDemo extends Application{
       launch(args);
    }
    public void start(Stage stage)throws IOException{
-     
+      obj=new CovidProject();
       //button for triggering event 
       button=new Button("Submit");
-      button.setOnAction(new ButtonClickHandler());
-      
+            
       //checkBox for country
       countryCheckBox=new CheckBox("Country");
       countryCheckBox.setSelected(false);
-      countryCheckBox.setOnAction(new countryCheckBoxHandler());
+
       
-      //checkbox for month
+      //checkbox for month checkbox
       monthCheckBox=new CheckBox("Month");
       monthCheckBox.setSelected(false);
-      monthCheckBox.setOnAction(new monthCheckBoxHandler());
-      
+            
       //hbox for checkbox layout
       checkBoxList=new HBox(10,countryCheckBox,monthCheckBox);
       checkBoxList.setPadding(new Insets(10));
@@ -108,66 +106,48 @@ public class CovidDemo extends Application{
       stage.setScene(scene);
       stage.show();
    
-   }
-      /*
-    * Event handler class for button
-    */
-   class countryCheckBoxHandler implements EventHandler<ActionEvent>{
-      @Override
-      public void handle(ActionEvent event) 
-      {
-         if(!countryCheckBox.isSelected())
-            vbox.getChildren().remove(countryText);
-         if(countryCheckBox.isSelected())
-            vbox.getChildren().add(countryText);
-      
-                 
-         
-      }
-   }
-      
-    class monthCheckBoxHandler implements EventHandler<ActionEvent>{
-       @Override
-      public void handle(ActionEvent event) 
-      {
-         
-          if(!monthCheckBox.isSelected())
-             vbox.getChildren().remove(monthSelection);
-          if(monthCheckBox.isSelected())
-             vbox.getChildren().add(monthSelection);   
-       
-       }
    
-   }
-   
-   class ButtonClickHandler implements EventHandler<ActionEvent>{
-      @Override
-      public void handle(ActionEvent event) 
+     /*events below
+      ____________________________________________________________________________________________ 
+     */    
+      
+      //button event           
+      button.setOnAction(event ->
       {
-         if(countryText.getText().toUpperCase().equals("US")){
+      if(countryText.getText().toUpperCase().equals("US")){
             if(vbox.getChildren().contains(stateText))
                vbox.getChildren().remove(stateText);
             else  
                vbox.getChildren().add(stateText);
-     
-         }      
-         try
-         {
-            obj=new CovidProject();
-         }
-         
-         catch(IOException e)
-         {
-            
-            
-         }
-         //placeholder that will be used for getting case numbers displayed
-         result.setText("Result");
+       }
+       //need to set if statements and call the correct method
+       result.setText("total cases: "+obj.getCasesWorld());
+      });
+
       
-      }
+      //month checkbox event
+      monthCheckBox.setOnAction(event ->{
+      if(!monthCheckBox.isSelected())
+        vbox.getChildren().remove(monthSelection);
+      if(monthCheckBox.isSelected())
+        vbox.getChildren().add(monthSelection);
+       });
+       
+       
+       //event for country checkbox
+      countryCheckBox.setOnAction(event -> {
+      if(!countryCheckBox.isSelected())
+         vbox.getChildren().remove(countryText);
+      if(countryCheckBox.isSelected())
+         vbox.getChildren().add(countryText);
+      });   
+
+      
    }
-   
-    }
+}   
+      
+      
+    
 
 
    

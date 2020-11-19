@@ -9,7 +9,9 @@ public class CovidProject
     private String[] states;
     private String[] confirmedCases;
     private String[] fatalities;
-    private final String finalDate="5/15/2020";
+    private String[] dateTokens;
+    private String[] endingDate={"1/31/2020","2/29/2020","3/31/2020","4/30/2020","5/15/2020"};
+    
     
    
    
@@ -67,7 +69,7 @@ public class CovidProject
          {
             
             
-            if(dateArray[i].equals(finalDate)&&countryArray[i].equals(country))
+            if(dateArray[i].equals(endingDate[endingDate.length-1])&&countryArray[i].equals(country))
                total+=Integer.parseInt(confirmedCases[i]);
             
          
@@ -77,57 +79,38 @@ public class CovidProject
 
       }
       
-      public String getCasesCountry(String country,int monthNum)
-     {
-            String cases="";
-            int total=0;
-            for(int i=0;i<size;i++)
-            {
-                if(country.equals("US")){
-                  if(getLastDate(monthNum).equals(dateArray[i]))
-                     total+=Integer.parseInt(confirmedCases[i]);
-                }     
-                if(countryArray[i].equals(country)&&getLastDate(monthNum).equals(dateArray[i]))
-                  cases=confirmedCases[i];
-
-            }
-                if(country.equals("US"))
-                  return Integer.toString(total);
-                else
-                  return cases;  
-         
-       
+       public String getCasesCountry(String country,int monthNum)
+      {
+             //get cases in coutry during a month
+             int cases=0;
+             for(int i=0;i<size;i++){
+             if(country.equals(countryArray[i])&&dateArray[i].equals(endingDate[monthNum-1]))
+               cases+=Integer.parseInt(confirmedCases[i]);
+                
+             }
+             return Integer.toString(cases);
      }
       //gets the total cases in world
       public String getCasesWorld()
       {
-         int cases=0;
-         for(int i=0;i<size;i++)
-         {
-            if(dateArray[i].equals(finalDate))
-               cases+=Integer.parseInt(confirmedCases[i]);
-         
-         }
-         
-         return Integer.toString(cases);
+                  
+         return getCasesWorld(5);
       
       }
       
-       public String getCasesWorld(char monthNum)
-       {
-            int cases=0;
-            for(int i=0;i<size;i++)
+        public String getCasesWorld(int monthNum)
+        {
+           int cases=0;
+           for(int i=0;i<size;i++)
             {
-                
-                  if(getLastDate(monthNum).equals(dateArray[i]))
-                     cases+=Integer.parseInt(confirmedCases[i]);
-            }
-                
-
-                  
+               if(dateArray[i].equals(endingDate[endingDate.length-1]))
+                  cases+=Integer.parseInt(confirmedCases[i]);
            
-                return Integer.toString(cases);    
-       }
+            }
+            return Integer.toString(cases);
+
+                    
+        }
    
          //gets total cases in a state in the US
          public String getCasesState(String inputState)
@@ -136,7 +119,7 @@ public class CovidProject
             for(int i=0;i<size;i++)
             {
                
-               if(states[i].equals(inputState)&&dateArray[i].equals(finalDate))
+               if(states[i].equals(inputState)&&dateArray[i].equals(endingDate[endingDate.length-1]))
                   cases=confirmedCases[i];
                 
             
@@ -146,43 +129,29 @@ public class CovidProject
          
          }
          //gets total cases in a state in the US during a month
-         public String getCasesState(String inputState,char monthNum)
-         {
+          public String getCasesState(String inputState,int monthNum)
+          {
+             //get cases in state during month
             String cases="";
             for(int i=0;i<size;i++)
             {
-                if(states[i].equals(inputState)&&getLastDate(monthNum).equals(dateArray[i]))
+               
+               if(states[i].equals(inputState)&&dateArray[i].equals(endingDate[monthNum-1]))
                   cases=confirmedCases[i];
-
+                
+            
             }
-                return cases;
-
-  
-         }
+            return cases;
+                  
+          }
          
-         public String getLastDate(int monthNum)
-         {
-            
-            String lastDate="";
-            if(monthNum==1);
-               lastDate="1/31/2020";
-            if(monthNum==2);
-               lastDate="2/29/2020";
-            if(monthNum==3);
-               lastDate="3/31/2020";
-            if(monthNum==4);
-               lastDate="4/30/2020";
-            if(monthNum==5);
-               lastDate=finalDate;
-             
-            return lastDate;
-            
+                     
             
             
             
          
          
-         }
+         
          
                   
 }  

@@ -6,7 +6,7 @@ public class test
    {
    
       CovidProject obj=new CovidProject();
-      System.out.println(obj.getCasesCountry("Kenya",3));
+      System.out.println(obj.getCasesWorld(3));
    
    
    
