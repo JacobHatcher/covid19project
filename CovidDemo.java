@@ -79,27 +79,15 @@ public class CovidDemo extends Application{
       
       vbox=new VBox(10);
       
-      // text field to get country from user
+      // text fields
       countryText=new TextField("Enter Country");
       countryText.setPrefWidth(130);
       countryText.setMaxWidth(130);
-      
-      
-   
-      
       stateText=new TextField("Enter State");
    
       //label that will be used to show the case numbers
       result=new Label("");
-      
-       
-      
-      
-             
-      
-      
-      
-      
+
       //gridPane to organize all componets
       gridPane=new GridPane();
       gridPane.getChildren().addAll(result,button,checkBoxes,vbox);

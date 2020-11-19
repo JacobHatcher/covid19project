@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.Scanner;
 public class CovidProject
 {
-
+    private Scanner inputFile;
     private int size=0;
     private String[] countryArray;
     private String[] dateArray;
@@ -19,7 +19,7 @@ public class CovidProject
    {
       
          File file = new File("train-covid.txt");
-         Scanner inputFile=new Scanner(file);
+         inputFile=new Scanner(file);
          //get array size
          while(inputFile.hasNextLine())
          {
@@ -63,7 +63,7 @@ public class CovidProject
          int total=0;
          
          
-         for(int i=0;i<size;i++)
+         for( int i=0;i<size;i++)
          {
             
             
@@ -77,16 +77,25 @@ public class CovidProject
 
       }
       
-      public String getCasesCountry(String country,char month)
+      public String getCasesCountry(String country,int monthNum)
      {
             String cases="";
+            int total=0;
             for(int i=0;i<size;i++)
             {
-                if(countryArray[i].equals(country)&&dateArray[i].charAt(0)==month&&dateArray[i+1].charAt(0)!=month)
+                if(country.equals("US")){
+                  if(getLastDate(monthNum).equals(dateArray[i]))
+                     total+=Integer.parseInt(confirmedCases[i]);
+                }     
+                if(countryArray[i].equals(country)&&getLastDate(monthNum).equals(dateArray[i]))
                   cases=confirmedCases[i];
 
             }
-                return cases;         
+                if(country.equals("US"))
+                  return Integer.toString(total);
+                else
+                  return cases;  
+         
        
      }
       //gets the total cases in world
@@ -104,15 +113,19 @@ public class CovidProject
       
       }
       
-       public String getCasesWorld(char month)
+       public String getCasesWorld(char monthNum)
        {
             int cases=0;
             for(int i=0;i<size;i++)
             {
-                if(dateArray[i].charAt(0)==month&&dateArray[i+1].charAt(0)!=month)
-                cases+=Integer.parseInt(confirmedCases[i]);
-
+                
+                  if(getLastDate(monthNum).equals(dateArray[i]))
+                     cases+=Integer.parseInt(confirmedCases[i]);
             }
+                
+
+                  
+           
                 return Integer.toString(cases);    
        }
    
@@ -123,7 +136,7 @@ public class CovidProject
             for(int i=0;i<size;i++)
             {
                
-               if(states[i].equals(inputState)&&dateArray.equals(finalDate))
+               if(states[i].equals(inputState)&&dateArray[i].equals(finalDate))
                   cases=confirmedCases[i];
                 
             
@@ -133,18 +146,42 @@ public class CovidProject
          
          }
          //gets total cases in a state in the US during a month
-         public String getCasesState(String inputState,char month)
+         public String getCasesState(String inputState,char monthNum)
          {
             String cases="";
             for(int i=0;i<size;i++)
             {
-                if(states[i].equals(inputState)&&dateArray[i].charAt(0)==month&&dateArray[i+1].charAt(0)!=month)
+                if(states[i].equals(inputState)&&getLastDate(monthNum).equals(dateArray[i]))
                   cases=confirmedCases[i];
 
             }
                 return cases;
 
   
+         }
+         
+         public String getLastDate(int monthNum)
+         {
+            
+            String lastDate="";
+            if(monthNum==1);
+               lastDate="1/31/2020";
+            if(monthNum==2);
+               lastDate="2/29/2020";
+            if(monthNum==3);
+               lastDate="3/31/2020";
+            if(monthNum==4);
+               lastDate="4/30/2020";
+            if(monthNum==5);
+               lastDate=finalDate;
+             
+            return lastDate;
+            
+            
+            
+            
+         
+         
          }
          
                   
