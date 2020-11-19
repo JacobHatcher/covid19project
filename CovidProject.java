@@ -77,12 +77,18 @@ public class CovidProject
 
       }
       
-    //   public String getCasesCountry(String country,String month)
-//       {
-//             get the total amount of cases during a month in a country
-//          
-//       
-//       }
+      public String getCasesCountry(String country,char month)
+     {
+            String cases="";
+            for(int i=0;i<size;i++)
+            {
+                if(countryArray[i].equals(country)&&dateArray[i].charAt(0)==month&&dateArray[i+1].charAt(0)!=month)
+                  cases=confirmedCases[i];
+
+            }
+                return cases;         
+       
+     }
       //gets the total cases in world
       public String getCasesWorld()
       {
@@ -98,12 +104,18 @@ public class CovidProject
       
       }
       
-      // public String getCasesWorld(String month)
-//       {
-//             get the total amount of cases during a  month worldwide
-//       
-//       }
-  
+       public String getCasesWorld(char month)
+       {
+            int cases=0;
+            for(int i=0;i<size;i++)
+            {
+                if(dateArray[i].charAt(0)==month&&dateArray[i+1].charAt(0)!=month)
+                cases+=Integer.parseInt(confirmedCases[i]);
+
+            }
+                return Integer.toString(cases);    
+       }
+   
          //gets total cases in a state in the US
          public String getCasesState(String inputState)
          {
@@ -121,27 +133,21 @@ public class CovidProject
          
          }
          //gets total cases in a state in the US during a month
-         public String getCasesState(String inputState,String month)
+         public String getCasesState(String inputState,char month)
          {
             String cases="";
-            String[] dateTokens=month.split("/");
             for(int i=0;i<size;i++)
             {
-                for(int j=0;j<states.length;j++)
-               {
-               if(states[j].equals(inputState)&&//need to modify this if statement to only get the last date from the month since data is cumulative
-               dateTokens.equals(month))
+                if(states[i].equals(inputState)&&dateArray[i].charAt(0)==month&&dateArray[i+1].charAt(0)!=month)
                   cases=confirmedCases[i];
-               } 
-           
+
             }
-               return cases;
+                return cases;
 
   
          }
          
-          
-        
+                  
 }  
       
       
