@@ -28,8 +28,7 @@ public class CovidDemo extends Application{
     
   
  
-   private VBox checkBoxes,vbox;
-   private HBox dropDownMenus,finalContainer;
+   private VBox checkBoxes,nodesContainer;
    private Button button;
    private ComboBox<String> monthSelection,countrySelection;
    private Scene scene;
@@ -44,40 +43,24 @@ public class CovidDemo extends Application{
       launch(args);
    }
    public void start(Stage stage)throws IOException{
-      obj=new CovidProject();
-      //button for triggering event 
+      
+      
+      //buttons 
       button=new Button("Submit");
             
-      //checkBox for country
+      //checkBoxes
       countryCheckBox=new CheckBox("Country");
-      
-      // us checkbox
       CheckBox usCheckBox=new CheckBox("United States");
-      
-      //world checkbox
       CheckBox worldCheckBox=new CheckBox("WorldWide");
-
-      
-      //checkbox for month checkbox
       monthCheckBox=new CheckBox("Month");
             
-      //hbox for checkbox layout
-      checkBoxList=new GridPane();
-      checkBoxList.getChildren().addAll(countryCheckBox,monthCheckBox,usCheckBox,worldCheckBox);
-      checkBoxList.setConstraints(worldCheckBox,0,0);
-      checkBoxList.setConstraints(countryCheckBox,0,1);
-      checkBoxList.setConstraints(usCheckBox,1,0);
-      checkBoxList.setConstraints(monthCheckBox,1,1);
-      checkBoxList.setPadding(new Insets(10));
-      checkBoxList.setAlignment(Pos.CENTER);
+      //labels
+      result=new Label("");
+      label1=new Label("choose search filter(s)");
       
-      //vbox for checkbox and label1
-      label1=new Label("Select how to search");
-      checkBoxes=new VBox(10,label1,checkBoxList);
-      checkBoxes.setPadding(new Insets(0));
-      checkBoxes.setAlignment(Pos.CENTER_LEFT);
       
-      //month choice dropdown menu
+      
+      //comboboxes
       monthSelection = new ComboBox<>();
       monthSelection.getItems().addAll("All Months","January","February","March","April","May");
       monthSelection.setValue("Select a Month");
@@ -99,32 +82,49 @@ public class CovidDemo extends Application{
       stateSelection.setMaxHeight(20);
       stateSelection.setValue("Select a State");
 
-      
-      //add nodes on action of checkbox
-      vbox=new VBox(10);
-      
+
       // text fields
       countryText=new TextField("Enter Country");
       countryText.setPrefWidth(130);
       countryText.setMaxWidth(130);
-      
-   
-      //label that will be used to show the case numbers
-      result=new Label("");
 
+      //gridpanes
+      checkBoxList=new GridPane();
+      checkBoxList.getChildren().addAll(countryCheckBox,monthCheckBox,usCheckBox,worldCheckBox);
+      checkBoxList.setConstraints(worldCheckBox,0,0);
+      checkBoxList.setConstraints(countryCheckBox,0,1);
+      checkBoxList.setConstraints(usCheckBox,1,0);
+      checkBoxList.setConstraints(monthCheckBox,1,1);
+      checkBoxList.setPadding(new Insets(10));
+      checkBoxList.setAlignment(Pos.CENTER);
+      checkBoxList.setHgap(2);
+      checkBoxList.setVgap(2);
+      
+      //vboxes
+      checkBoxes=new VBox(10,label1,checkBoxList);
+      checkBoxes.setPadding(new Insets(0));
+      checkBoxes.setAlignment(Pos.CENTER_LEFT);     
+      nodesContainer=new VBox(10);
+      
       //gridPane to organize all componets
       gridPane=new GridPane();
-      gridPane.getChildren().addAll(result,button,checkBoxes,vbox);
+      gridPane.getChildren().addAll(result,button,checkBoxes,nodesContainer);
       gridPane.setAlignment(Pos.CENTER);
       gridPane.setPadding(new Insets(10));
       
       gridPane.setConstraints(result,1,1);
       gridPane.setConstraints(button,1,0);
-      gridPane.setConstraints(vbox,0,1);
+      gridPane.setConstraints(nodesContainer,0,1);
       gridPane.setConstraints(checkBoxes,0,0);
       
       gridPane.setVgap(20);
       gridPane.setHgap(40);
+      
+      
+      
+      
+
+      
       
       //scene
       stage.setTitle("Covid Tracker");      
@@ -137,7 +137,9 @@ public class CovidDemo extends Application{
       ____________________________________________________________________________________________ 
      */    
       
-      //button event   
+      //button event 
+      
+      obj=new CovidProject();  
              
       button.setOnAction(event ->
       {
@@ -154,32 +156,34 @@ public class CovidDemo extends Application{
       //month checkbox event
       monthCheckBox.setOnAction(event ->{
       if(!monthCheckBox.isSelected())
-        vbox.getChildren().remove(monthSelection);
-      if(monthCheckBox.isSelected())
-        vbox.getChildren().add(monthSelection);
+        nodesContainer.getChildren().remove(monthSelection);
+      else
+        nodesContainer.getChildren().add(monthSelection);
        });
        
        
        //event for country checkbox
-      countryCheckBox.setOnAction(event -> {
-      if(countryCheckBox.isSelected()){
-            vbox.getChildren().remove(stateSelection);
+      countryCheckBox.setOnAction(event -> 
+      {
+         if(countryCheckBox.isSelected())
+         {
+            nodesContainer.getChildren().remove(stateSelection);
             worldCheckBox.setSelected(false);             
             usCheckBox.setSelected(false);      
-            if(!vbox.getChildren().contains(countryText))
-               vbox.getChildren().add(countryText);
-      }           
+            if(!nodesContainer.getChildren().contains(countryText))
+               nodesContainer.getChildren().add(countryText);
+         }           
    });   
 
       //event for us checkbox
       usCheckBox.setOnAction(event ->
       {
          if(usCheckBox.isSelected()){
-            vbox.getChildren().remove(countryText);
+            nodesContainer.getChildren().remove(countryText);
             countryCheckBox.setSelected(false);             
             worldCheckBox.setSelected(false);
-            if(!vbox.getChildren().contains(stateSelection))
-               vbox.getChildren().add(stateSelection);       
+            if(!nodesContainer.getChildren().contains(stateSelection))
+               nodesContainer.getChildren().add(stateSelection);       
          }
      });    
      
@@ -188,8 +192,8 @@ public class CovidDemo extends Application{
      worldCheckBox.setOnAction(event ->
      {
          if(worldCheckBox.isSelected()){
-            vbox.getChildren().remove(countryText);
-            vbox.getChildren().remove(stateSelection);
+            nodesContainer.getChildren().remove(countryText);
+            nodesContainer.getChildren().remove(stateSelection);
             countryCheckBox.setSelected(false);             
             usCheckBox.setSelected(false);
          }
