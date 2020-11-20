@@ -144,6 +144,28 @@ public class CovidProject
             return cases;
                   
           }
+          
+          public String[] getStateArray()
+          {
+            String[] stateArray=new String[50];
+            for(int i=0;i<size;i++)
+            {
+               if(countryArray[i].equals("US"))
+                  stateArray[0]=states[i];
+                  break;
+            }      
+                             
+            for(int i=1;i<size;i++)
+            {
+              if(countryArray[i].equals("US")&&states[i].indexOf(states[i-1])==-1)
+                 for(int j=0;j<stateArray.length;j++)
+                 {
+                    stateArray[j]=states[i];
+            }    } 
+            
+            
+             return stateArray;
+          }
          
                      
             
