@@ -17,6 +17,7 @@ import javafx.scene.text.FontPosture;
 import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 
 
@@ -32,10 +33,11 @@ public class CovidDemo extends Application{
    private Button button;
    private ComboBox<String> monthSelection,countrySelection;
    private Scene scene;
-   private Label label1,result;
+   private Label label1;
    private CovidProject obj;
    private CheckBox countryCheckBox,monthCheckBox;
    private TextField countryText;
+   private TextArea result;
    private GridPane gridPane,checkBoxList;
       
 
@@ -51,11 +53,11 @@ public class CovidDemo extends Application{
       //checkBoxes
       countryCheckBox=new CheckBox("Country");
       CheckBox usCheckBox=new CheckBox("United States");
-      CheckBox worldCheckBox=new CheckBox("WorldWide");
+      CheckBox worldCheckBox=new CheckBox("Worldwide");
       monthCheckBox=new CheckBox("Month");
             
       //labels
-      result=new Label("");
+      
       label1=new Label("choose search filter(s)");
       
       
@@ -87,6 +89,11 @@ public class CovidDemo extends Application{
       countryText=new TextField("Enter Country");
       countryText.setPrefWidth(130);
       countryText.setMaxWidth(130);
+      
+      result=new TextArea();
+      result.setPrefWidth(227);
+      result.setPrefHeight(75);
+      result.setEditable(false);
 
       //gridpanes
       checkBoxList=new GridPane();
@@ -95,10 +102,7 @@ public class CovidDemo extends Application{
       checkBoxList.setConstraints(countryCheckBox,0,1);
       checkBoxList.setConstraints(usCheckBox,1,0);
       checkBoxList.setConstraints(monthCheckBox,1,1);
-      checkBoxList.setPadding(new Insets(10));
-      checkBoxList.setAlignment(Pos.CENTER);
-      checkBoxList.setHgap(2);
-      checkBoxList.setVgap(2);
+        
       
       //vboxes
       checkBoxes=new VBox(10,label1,checkBoxList);
@@ -108,48 +112,117 @@ public class CovidDemo extends Application{
       
       //gridPane to organize all componets
       gridPane=new GridPane();
-      gridPane.getChildren().addAll(result,button,checkBoxes,nodesContainer);
+      gridPane.getChildren().addAll(button,checkBoxes,nodesContainer);
       gridPane.setAlignment(Pos.CENTER);
       gridPane.setPadding(new Insets(10));
       
       gridPane.setConstraints(result,1,1);
-      gridPane.setConstraints(button,1,0);
+      gridPane.setConstraints(button,0,2);
       gridPane.setConstraints(nodesContainer,0,1);
       gridPane.setConstraints(checkBoxes,0,0);
       
       gridPane.setVgap(20);
-      gridPane.setHgap(40);
-      
-      
-      
-      
-
+      gridPane.setHgap(10);
       
       
       //scene
-      stage.setTitle("Covid Tracker");      
-      scene=new Scene( gridPane,350,250);
+      stage.setTitle("Covid Case Tracker from January 22-May 15");      
+      scene=new Scene( gridPane,400,345);
       stage.setScene(scene);
       stage.show();
    
    
      /*events below
       ____________________________________________________________________________________________ 
+      ____________________________________________________________________________________________     
      */    
       
       //button event 
       
-      obj=new CovidProject();  
+      obj=new CovidProject(); 
              
       button.setOnAction(event ->
       {
+         String monthName=monthSelection.getValue();
+         String countryName=countryText.getText();
+         String stateName=stateSelection.getValue();
+      
+        int monthNum=0;
+        if(monthName.equals("January"))
+           monthNum=1;
+        else if(monthName.equals("February"))
+           monthNum=2;               
+        else if(monthName.equals("March"))
+           monthNum=3;
+        else if(monthName.equals("April"))
+           monthNum=4;
+        else if(monthName.equals("May"))
+           monthNum=5;
+        
+        if(!gridPane.getChildren().contains(result)){
+            gridPane.getChildren().add(result);
+            gridPane.setConstraints(result,0,3);
+         }      
          //if only month set result to getCasesWorld(monthNum)
+         if(monthCheckBox.isSelected()&&!countryCheckBox.isSelected()&&!usCheckBox.isSelected()){
+            if(monthName.equals("Select a Month"))
+               result.setText("Please Select a Month");
+            else if(monthName.equals("All Months"))
+               result.setText("\tTotal Cases Worldwide\n\n\t\t "+obj.getCasesWorld());  
+            else
+               result.setText("New Cases Worldwide during "+monthName+"\n\n\t\t\t"+obj.getCasesWorld(monthNum));   
+            }   
          //if only worldwide selected set result to getCasesWorld()
-            //if world and month selected set result to getCasesWorld(monthNum)
+         //if world and month selected set result to getCasesWorld(monthNum)
+         else if(worldCheckBox.isSelected()){
+            if(!monthCheckBox.isSelected())
+               result.setText("\tTotal Cases Worldwide\n\n\t\t\t "+obj.getCasesWorld());
+            else{
+               if(monthName.equals("All Months"))
+                  result.setText("\tTotal Cases Worldwide\n\n\t\t\t "+obj.getCasesWorld());
+               else 
+                  result.setText("New Cases Worldwide during "+monthName+"\n\n\t\t\t"+obj.getCasesWorld(monthNum));  
+            }   
+         }      
+         else if(countryCheckBox.isSelected()){     
          //if only country selected set result to getCasesCountry(country)
-            //if country and month selected set result to getCasesCountry(country, monthNum) 
+            if(!monthCheckBox.isSelected()||monthName.equals("Select a Month"))
+              result.setText("\tTotal Cases in "+countryName+"\n\n\t\t\t"+obj.getCasesCountry(countryName));  
+            //if country and month selected set result to getCasesCountry(countryName, monthNum) 
+            else{
+               if(monthName.equals("Select a Month"))
+                  result.setText("Please Select a valid month");
+               else if(monthName.equals("All Months"))
+                  result.setText("New Cases in "+countryName+"\n\n\t\t\t"+obj.getCasesCountry(countryName));
+               else
+                  result.setText("New Cases in "+countryName+" during "+monthName+"\n\n\t\t\t"+obj.getCasesCountry(countryName,monthNum));  
+                     
+            }
+       }       
          //if statements for all us options and call correct method             
-             
+         else if(usCheckBox.isSelected()){
+            if(stateName.equals("Select a State"))
+                  result.setText("Please Select a State");
+            else if(monthCheckBox.isSelected()){
+               
+               if(!stateName.equals("All States"))
+                  result.setText("New Cases in "+stateName+" during "+monthName+"\n\n\t\t\t"+obj.getCasesState(stateName,monthNum));
+               else
+                  result.setText("New Cases in US during"+monthName+"\n\n\t\t\t"+obj.getCasesCountry("us",monthNum));   
+            }
+            else{
+               if(!stateName.equals("All States"))
+                  result.setText("\tNew Cases in "+stateName+"\n\n\t\t\t"+obj.getCasesState(stateName));
+               else
+                  result.setText("\tTotal Cases in US \n\n\t\t\t"+obj.getCasesCountry("us"));
+             }        
+         }
+         
+         
+         gridPane.setHgap(0);
+         label1.setText("choose search filter(s)"); 
+         nodesContainer.setPadding(new Insets(0));   
+      
       });
 
       
@@ -165,14 +238,16 @@ public class CovidDemo extends Application{
        //event for country checkbox
       countryCheckBox.setOnAction(event -> 
       {
-         if(countryCheckBox.isSelected())
-         {
-            nodesContainer.getChildren().remove(stateSelection);
+         if(!countryCheckBox.isSelected())
+            nodesContainer.getChildren().remove(countryText);
+         else{
             worldCheckBox.setSelected(false);             
-            usCheckBox.setSelected(false);      
-            if(!nodesContainer.getChildren().contains(countryText))
-               nodesContainer.getChildren().add(countryText);
-         }           
+            usCheckBox.setSelected(false); 
+            nodesContainer.getChildren().add(countryText);  
+         } 
+         result.clear();        
+                         
+                  
    });   
 
       //event for us checkbox
@@ -183,8 +258,11 @@ public class CovidDemo extends Application{
             countryCheckBox.setSelected(false);             
             worldCheckBox.setSelected(false);
             if(!nodesContainer.getChildren().contains(stateSelection))
-               nodesContainer.getChildren().add(stateSelection);       
+               nodesContainer.getChildren().add(stateSelection);   
+            else
+               nodesContainer.getChildren().remove(stateSelection);      
          }
+         result.clear(); 
      });    
      
      
@@ -198,7 +276,7 @@ public class CovidDemo extends Application{
             usCheckBox.setSelected(false);
          }
          
-         
+         result.clear(); 
             
      
      

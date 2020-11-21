@@ -69,7 +69,7 @@ public class CovidProject
          {
             
             
-            if(dateArray[i].equals(endingDate[5])&&countryArray[i].equalsIgnoreCase(country))
+            if(dateArray[i].equals(endingDate[4])&&countryArray[i].equalsIgnoreCase(country))
                total+=Integer.parseInt(confirmedCases[i]);
             
          
@@ -79,7 +79,7 @@ public class CovidProject
 
       }
       
-       public String getCasesCountry(String country,int monthNum) throws ArrayIndexOutOfBoundsException
+       public String getCasesCountry(String country,int monthNum)
       {
              //get cases in coutry during a month
              int total=0;
@@ -87,13 +87,15 @@ public class CovidProject
              for(int i=0;i<size;i++){
              if(country.equalsIgnoreCase(countryArray[i])&&dateArray[i].equals(endingDate[monthNum-1]))
                total+=Integer.parseInt(confirmedCases[i]);
-               
-             
-               
-               
-                
              }
-             return Integer.toString(total);
+             for(int i=0;i<size;i++){
+             if(monthNum==1)
+               lastMonthTotal=0;
+             else if(country.equalsIgnoreCase(countryArray[i])&&dateArray[i].equals(endingDate[monthNum-2]))
+               lastMonthTotal+=Integer.parseInt(confirmedCases[i]);
+               
+             }
+             return Integer.toString(total-lastMonthTotal);
      }
       //gets the total cases in world
       public String getCasesWorld()
@@ -105,6 +107,7 @@ public class CovidProject
       
         public String getCasesWorld(int monthNum)
         {
+           int lastMonthTotal=0;
            int cases=0;
            for(int i=0;i<size;i++)
             {
@@ -112,7 +115,13 @@ public class CovidProject
                   cases+=Integer.parseInt(confirmedCases[i]);
            
             }
-            return Integer.toString(cases);
+            for(int i=0;i<size;i++){
+             if(monthNum==1)
+               lastMonthTotal=0;  
+             else if(dateArray[i].equals(endingDate[monthNum-2]))
+               lastMonthTotal +=Integer.parseInt(confirmedCases[i]);
+               }
+            return Integer.toString(cases-lastMonthTotal);
 
                     
         }
@@ -124,7 +133,7 @@ public class CovidProject
             for(int i=0;i<size;i++)
             {
                
-               if(states[i].equals(inputState)&&dateArray[i].equals(endingDate[endingDate.length-1]))
+               if(states[i].equalsIgnoreCase(inputState)&&dateArray[i].equals(endingDate[endingDate.length-1]))
                   cases=confirmedCases[i];
                 
             
@@ -137,36 +146,38 @@ public class CovidProject
           public String getCasesState(String inputState,int monthNum)
           {
              //get cases in state during month
-            String cases="";
-            for(int i=0;i<size;i++)
+           int lastMonthTotal=0;
+           int cases=0;
+           for(int i=0;i<size;i++)
             {
-               
-               if(states[i].equals(inputState)&&dateArray[i].equals(endingDate[monthNum-1]))
-                  cases=confirmedCases[i];
-                
-            
+               if(states[i].equalsIgnoreCase(inputState)&&dateArray[i].equals(endingDate[monthNum-1]))
+                  cases+=Integer.parseInt(confirmedCases[i]);
+           
             }
-            return cases;
-                  
-          }
-          
-                   
-         public int getMonthNum(String month)
-         {
-            int monthNum=0;
-            if(month.equals("January"))
-               monthNum=1;
-            if(month.equals("February"))
-               monthNum=2;               
-            if(month.equals("March"))
-               monthNum=3;
-            if(month.equals("April"))
-               monthNum=4;
-            if(month.equals("May"))
-               monthNum=5;
-            return monthNum;
-         
-         }
+            for(int i=0;i<size;i++){
+             if(monthNum==1)
+               lastMonthTotal=0;  
+             else if(states[i].equalsIgnoreCase(inputState)&&dateArray[i].equals(endingDate[monthNum-2]))
+               lastMonthTotal +=Integer.parseInt(confirmedCases[i]);
+               }
+            return Integer.toString(cases-lastMonthTotal);          
+         }     
+//          public int getMonthNum(String month)
+//          {
+//             int monthNum=0;
+//             if(month.equals("January"))
+//                monthNum=1;
+//             else if(month.equals("February"))
+//                monthNum=2;               
+//             else if(month.equals("March"))
+//                monthNum=3;
+//             else if(month.equals("April"))
+//                monthNum=4;
+//             else if(month.equals("May"))
+//                monthNum=5;
+//             return monthNum;
+//          
+//          }
                      
             
             
@@ -181,13 +192,6 @@ public class CovidProject
       
       
    
-
-
-
-
-
-
-
 
 
 
